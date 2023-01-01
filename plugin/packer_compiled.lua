@@ -134,6 +134,11 @@ _G.packer_plugins = {
     path = "/home/luv/.local/share/nvim/site/pack/packer/start/monokai.nvim",
     url = "https://github.com/tanvirtin/monokai.nvim"
   },
+  ["nvim-autopairs"] = {
+    loaded = true,
+    path = "/home/luv/.local/share/nvim/site/pack/packer/start/nvim-autopairs",
+    url = "https://github.com/windwp/nvim-autopairs"
+  },
   ["nvim-cmp"] = {
     loaded = true,
     path = "/home/luv/.local/share/nvim/site/pack/packer/start/nvim-cmp",
