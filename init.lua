@@ -1,6 +1,7 @@
 require("plugins")
 require("set")
 require("remap")
+require("filetype-config")
 
 vim.g.netrw_browse_split = 0
 vim.g.netrw_banner = 0
