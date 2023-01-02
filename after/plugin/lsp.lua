@@ -60,8 +60,8 @@ lsp.on_attach(function(client, bufnr)
 
     vim.keymap.set("n", "<leader>g", vim.diagnostic.open_float, opts)
 
-    vim.keymap.set("n", "[g", vim.diagnostic.goto_next, opts)
-    vim.keymap.set("n", "]g", vim.diagnostic.goto_prev, opts)
+    vim.keymap.set("n", "[g", vim.diagnostic.goto_prev, opts)
+    vim.keymap.set("n", "]g", vim.diagnostic.goto_next, opts)
 
     local builtin = require("telescope.builtin")
     vim.keymap.set("n", "gd", builtin.lsp_definitions, opts)
