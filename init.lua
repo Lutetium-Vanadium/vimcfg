@@ -20,10 +20,14 @@ autocmd('TextYankPost', {
     end,
 })
 
--- Format on save
-local format_group = augroup('FormatOnSave', {})
-autocmd('BufWritePre', {
-    group = format_group,
-    pattern = '*',
-    callback = vim.lsp.buf.formatting_sync,
-})
+-- -- Format on save
+-- local format_group = augroup('FormatOnSave', {})
+-- autocmd('BufWritePre', {
+--     group = format_group,
+--     pattern = '*',
+--     callback = function ()
+--         if vim.lsp.buf.formatting_sync then
+--             vim.lsp.buf.formatting_sync()
+--         end
+--     end,
+-- })

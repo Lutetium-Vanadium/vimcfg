@@ -48,6 +48,5 @@ function MonokaiCustom()
     vim.cmd("hi LineNr guibg=None")
 end
 
-
 -- MonokaiLib()
 MonokaiCustom()
