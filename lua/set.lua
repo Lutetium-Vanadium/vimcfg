@@ -29,3 +29,6 @@ vim.opt.updatetime = 50
 
 vim.opt.textwidth = 100
 vim.opt.colorcolumn = "+1"
+
+-- So that copilot chat opens on the right side
+vim.opt.splitright = true

@@ -20,10 +20,22 @@ return require('packer').startup(function(use)
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.3',
         -- or                            , branch = '0.1.x',
-        requires = { { 'nvim-lua/plenary.nvim' } }
+        requires = {
+            { 'nvim-lua/plenary.nvim' },
+            { 'nvim-telescope/telescope-ui-select.nvim' }
+        },
+
+        extensions = {
+            ["ui-select"] = {
+                require("telescope.themes").get_dropdown {
+                    -- even more opts
+                }
+            }
+        }
     }
 
     use({ 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' })
+    use('nvim-treesitter/nvim-treesitter-context')
     use('nvim-treesitter/playground')
     use('mbbill/undotree')
 
@@ -34,6 +46,7 @@ return require('packer').startup(function(use)
             { 'neovim/nvim-lspconfig' },
             { 'williamboman/mason.nvim' },
             { 'williamboman/mason-lspconfig.nvim' },
+            { 'stevearc/conform.nvim' },
 
             -- Autocompletion
             { 'hrsh7th/nvim-cmp' },
@@ -46,11 +59,54 @@ return require('packer').startup(function(use)
             -- Snippets
             { 'L3MON4D3/LuaSnip' },
             { 'rafamadriz/friendly-snippets' },
-
-            -- inlay type hints
-            { 'lvimuser/lsp-inlayhints.nvim' },
         }
     }
 
-    use { "zbirenbaum/copilot.lua" }
+    use {
+        "zbirenbaum/copilot.lua",
+    }
+
+    use {
+        "zbirenbaum/copilot-cmp",
+        config = function()
+            require("copilot_cmp").setup()
+        end,
+    }
+
+    use {
+        'yetone/avante.nvim',
+        branch = 'main',
+        -- Remove CARGO_TARGET_DIR so that it builds to the right place
+        run = 'env -u CARGO_TARGET_DIR make',
+        requires = {
+            'nvim-lua/plenary.nvim',
+            'MunifTanjim/nui.nvim',
+            'MeanderingProgrammer/render-markdown.nvim',
+            'HakonHarnes/img-clip.nvim',
+            'stevearc/dressing.nvim',
+            'folke/snacks.nvim',
+        }
+    }
+
+    use({
+        "nvim-neo-tree/neo-tree.nvim",
+        branch = "v3.x",
+        requires = {
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+            "nvim-tree/nvim-web-devicons",
+            "antosha417/nvim-lsp-file-operations",
+        }
+    })
+
+    use {
+        "mfussenegger/nvim-dap",
+        requires = {
+            "rcarriga/nvim-dap-ui",
+            "nvim-neotest/nvim-nio",
+            "jay-babu/mason-nvim-dap.nvim",
+            "theHamsta/nvim-dap-virtual-text",
+            'mfussenegger/nvim-dap-python',
+        },
+    }
 end)

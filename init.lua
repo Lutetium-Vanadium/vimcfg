@@ -25,7 +25,7 @@ autocmd('TextYankPost', {
 -- autocmd('BufWritePre', {
 --     group = format_group,
 --     pattern = '*',
---     callback = function ()
+--     callback = function()
 --         if vim.lsp.buf.formatting_sync then
 --             vim.lsp.buf.formatting_sync()
 --         end
