@@ -109,4 +109,11 @@ return require('packer').startup(function(use)
             'mfussenegger/nvim-dap-python',
         },
     }
+
+    use {
+        "FabijanZulj/blame.nvim",
+        config = function()
+            require('blame').setup {}
+        end,
+    }
 end)
