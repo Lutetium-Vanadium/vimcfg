@@ -33,8 +33,12 @@ table.insert(dap.configurations.python, {
     }
 })
 
+local dap_ui_open = false
 local keymap_restore = {}
-dap.listeners.after['event_initialized']['me'] = function()
+
+local function open_dapui()
+    require("dapui").open()
+    dap_ui_open = true
     for _, buf in pairs(vim.api.nvim_list_bufs()) do
         local keymaps = vim.api.nvim_buf_get_keymap(buf, 'n')
         for _, keymap in pairs(keymaps) do
@@ -48,7 +52,9 @@ dap.listeners.after['event_initialized']['me'] = function()
         'n', 'K', '<Cmd>lua require("dap.ui.widgets").hover()<CR>', { silent = true })
 end
 
-dap.listeners.after['event_terminated']['me'] = function()
+local function close_dapui()
+    dap_ui_open = false
+    require("dapui").close()
     for _, keymap in pairs(keymap_restore) do
         if keymap.rhs then
             vim.api.nvim_buf_set_keymap(
@@ -70,6 +76,16 @@ dap.listeners.after['event_terminated']['me'] = function()
     keymap_restore = {}
 end
 
+local function toggle_dapui()
+    if dap_ui_open then
+        close_dapui()
+    else
+        open_dapui()
+    end
+end
+
+-- Dap UI
+
 -- Allow 'q' to close floating dap windows
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "dap-float",
@@ -79,20 +95,39 @@ vim.api.nvim_create_autocmd("FileType", {
     end
 })
 
--- Dap UI
-
-ui.setup()
+ui.setup({
+    layouts = {
+        {
+            elements = {
+                { id = "stacks",      size = 0.15 },
+                { id = "scopes",      size = 0.55 },
+                { id = "breakpoints", size = 0.25 },
+                { id = "watches",     size = 0.05 },
+            },
+            position = "left",
+            size = 40
+        },
+        {
+            elements = {
+                { id = "repl",    size = 0.35 },
+                { id = "console", size = 0.65 }
+            },
+            position = "bottom",
+            size = 10
+        }
+    },
+})
 
 vim.fn.sign_define("DapBreakpoint", { text = "🐞" })
 
 dap.listeners.before.attach.dapui_config = function()
-    ui.open()
+    open_dapui()
 end
 dap.listeners.before.launch.dapui_config = function()
-    ui.open()
+    open_dapui()
 end
 dap.listeners.before.event_exited.dapui_config = function()
-    ui.close()
+    close_dapui()
 end
 
 vim.keymap.set("n", "<leader>dl", function() dap.run_last() end, { desc = "Run Last" })
@@ -104,7 +139,7 @@ vim.keymap.set("n", "<leader>dt", dap.toggle_breakpoint, { desc = "Debug: Toggle
 vim.keymap.set("n", "<leader>dc", function()
     dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
 end, { desc = "Debug: Set Conditional Breakpoint" })
-vim.keymap.set("n", "<leader>du", function() ui.toggle() end, { desc = "Toggle UI" })
+vim.keymap.set("n", "<leader>du", function() toggle_dapui() end, { desc = "Toggle UI" })
 vim.keymap.set("n", "<leader>dr", function() dap.repl.open() end, { desc = "Open REPL" })
 vim.keymap.set("n", "<leader>dq", function()
     require('dap').terminate()

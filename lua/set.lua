@@ -32,3 +32,5 @@ vim.opt.colorcolumn = "+1"
 
 -- So that copilot chat opens on the right side
 vim.opt.splitright = true
+
+vim.opt.winborder = 'rounded'
