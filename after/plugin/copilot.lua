@@ -21,6 +21,10 @@ require("copilot").setup {
     on_status_update = require("lualine").refresh,
 }
 
+require('render-markdown').setup({
+    file_types = { 'markdown', "md", "Avante" },
+})
+
 function setup_avante()
     require('avante').setup({
         provider = "copilot",
@@ -32,8 +36,13 @@ function setup_avante()
             -- TODO: add tools here
             auto_approve_tool_permissions = {
                 "rag_search", "git_diff", "glob", "search_keyword", "read_file_toplevel_symbols", "read_file",
-                "create_file",
-                "copy_path", "create_dir"
+                "create_file", "copy_path", "create_dir", "replace_in_file",
+
+                -- Extracted from http request sent to Copilot
+                "dispatch_agent", "ls", "grep", "delete_tool_use_message", "read_todos", "write_todos",
+                "str_replace", "view", "write_to_file", "insert", "undo_edit", "think", "get_diagnostics",
+                "attempt_completion", "web_search", "fetch", "read_definitions", "add_file_to_context",
+                "remove_file_from_context",
             },
         },
         prompt_logger = {                                           -- logs prompts to disk (timestamped, for replay/debugging)
@@ -94,24 +103,12 @@ function setup_avante()
         windows = {
             width = 35, -- default % based on available width
         },
+        providers = {
+            copilot = {
+                model = "claude-sonnet-4.5"
+            },
+        }
     })
 end
 
 vim.defer_fn(setup_avante, 200)
-
--- Basic chat functions
-vim.keymap.set("n", "<leader>cc", ":AvanteToggle<CR>")
-vim.keymap.set("n", "<leader>cr", ":AvanteRefresh<CR>")
--- Quick chat with input
-vim.keymap.set("n", "<leader>ci", function()
-    local input = vim.fn.input("Ask Avante: ")
-    if input ~= "" then
-        vim.cmd("AvanteAsk " .. input)
-    end
-end)
-
--- Predefined prompts
-vim.keymap.set("n", "<leader>ce", ":AvanteAsk explain this code<CR>")
-vim.keymap.set("n", "<leader>ct", ":AvanteAsk generate tests for this code<CR>")
-vim.keymap.set("n", "<leader>co", ":AvanteAsk optimize this code<CR>")
-vim.keymap.set("n", "<leader>cd", ":AvanteAsk add documentation to this code<CR>")
