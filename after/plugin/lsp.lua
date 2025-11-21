@@ -173,7 +173,7 @@ vim.lsp.enable('emmet_ls')
 require("conform").setup({
     log_level = vim.log.levels.DEBUG,
     formatters_by_ft = {
-        python = { "black" },
+        python = { "black", "isort" },
         javascript = { "prettier" },
         typescript = { "prettier" },
         javascriptreact = { "prettier" },
