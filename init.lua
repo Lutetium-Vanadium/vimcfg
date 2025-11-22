@@ -1,4 +1,6 @@
-require("plugins")
+require("colourscheme")
+require("config/lazy")
+-- require("packer_setup")
 require("set")
 require("remap")
 require("filetype-config")

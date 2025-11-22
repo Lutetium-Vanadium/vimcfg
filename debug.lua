@@ -5,7 +5,6 @@ local M = {}
 --- @param level integer|nil log level defined in vim.log.levels
 --- @param options LogOptions allows us to set different logging namespaces
 M.log = function(msg, level, options)
-
     -- extracting a namespace to determine which buffer to log to
     local opts = options or {}
     local ns = opts.namespace or "default"
@@ -21,7 +20,7 @@ M.log = function(msg, level, options)
     -- transform the integer log level to its string representation.
     local level_str = "INFO"
     for l, i in pairs(vim.log.levels) do
-        if level == i  then
+        if level == i then
             level_str = l
         end
     end
@@ -29,7 +28,7 @@ M.log = function(msg, level, options)
 
     -- ensure `msg` is always a table to make processing simpler
     if type(msg) == "string" then
-        msg = {msg}
+        msg = { msg }
     end
 
     -- Split `msg` on newlines, since nvim_buf_set_lines() does not like them
@@ -39,7 +38,7 @@ M.log = function(msg, level, options)
     msg = vim.iter(msg):flatten(1):totable()
 
     -- for each line add the log level
-    local complete_msg = vim.tbl_map(function (line)
+    local complete_msg = vim.tbl_map(function(line)
         return "[" .. level_str .. "] " .. line
     end, msg)
 
@@ -49,7 +48,7 @@ end
 
 
 --- @param namespace string
-M.buffer_name = function (namespace)
+M.buffer_name = function(namespace)
     return "LOG-" .. namespace
 end
 
@@ -69,7 +68,7 @@ end
 
 --- @param namespace string
 M.create_logger = function(namespace)
-    local opts = {namespace = namespace}
+    local opts = { namespace = namespace }
     local logging_func_for = function(level)
         return function(msg)
             M.log(msg, level, opts)
@@ -83,8 +82,4 @@ M.create_logger = function(namespace)
         warn = logging_func_for(vim.log.levels.WARN),
         error = logging_func_for(vim.log.levels.ERROR),
     }
-end
-
-function starts_with(str, prefix)
-    return string.sub(str, 1, string.len(prefix)) == prefix
 end

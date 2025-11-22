@@ -60,3 +60,13 @@ autocmd('FileType', {
         vim.opt_local.shiftwidth = 4
     end
 })
+
+autocmd('FileType', {
+    group = filetype_group,
+    pattern = { "AvanteInput" },
+    callback = function()
+        -- Disable line bar and auto wrapping
+        vim.opt.textwidth = 0
+        vim.opt.colorcolumn = ""
+    end
+})

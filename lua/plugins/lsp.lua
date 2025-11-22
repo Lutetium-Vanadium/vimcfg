@@ -1,0 +1,180 @@
+local kind_icons = {
+    Text = "󰊄",
+    Method = "󰊕",
+    Function = "󰊕",
+    Constructor = "",
+    Field = "",
+    Variable = "",
+    Class = "",
+    Interface = "",
+    Module = "",
+    Property = "",
+    Unit = "",
+    Value = "",
+    Enum = "",
+    Keyword = "",
+    Snippet = "",
+    Color = "",
+    File = "",
+    Reference = "",
+    Folder = "",
+    EnumMember = "",
+    Constant = "",
+    Struct = "",
+    Event = "",
+    Operator = "",
+    TypeParameter = "",
+    Copilot = "",
+}
+
+
+return {
+    {
+        "hrsh7th/nvim-cmp",
+        event = "InsertEnter",
+        config = function()
+            local cmp = require('cmp')
+            local cmp_select = { behavior = cmp.SelectBehavior.Select }
+            cmp.setup({
+                sources = {
+                    -- Copilot Source
+                    { name = "copilot", group_index = 2 },
+                    { name = 'nvim_lsp' },
+                    { name = 'path' },
+                    { name = 'nvim_lua' },
+                    { name = 'buffer',  keyword_length = 3 },
+                    { name = 'luasnip', keyword_length = 2 },
+                },
+                formatting = {
+                    fields = { "kind", "abbr", "menu" },
+                    format = function(entry, vim_item)
+                        -- Kind icons
+                        vim_item.kind = string.format("%s", kind_icons[vim_item.kind])
+                        -- vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
+                        vim_item.menu = ({
+                            nvim_lsp = "[LSP]",
+                            luasnip = "[Snippet]",
+                            buffer = "[Buffer]",
+                            path = "[Path]",
+                            copilot = "[Copilot]",
+                        })[entry.source.name]
+                        return vim_item
+                    end,
+                },
+                mapping = cmp.mapping.preset.insert({
+                    ['<C-k>'] = cmp.mapping.select_prev_item(cmp_select),
+                    ['<C-j>'] = cmp.mapping.select_next_item(cmp_select),
+                    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+                    ['<Tab>'] = cmp.mapping.confirm({ select = true }),
+                    ['<C-Space>'] = cmp.mapping.complete(),
+                }),
+            })
+        end
+    },
+    {
+        "VonHeikemen/lsp-zero.nvim",
+        dependencies = {
+            -- LSP Support
+            { "neovim/nvim-lspconfig" },
+            { "williamboman/mason.nvim" },
+            { "williamboman/mason-lspconfig.nvim" },
+            { "stevearc/conform.nvim" },
+
+            -- Autocompletion
+            { "hrsh7th/cmp-buffer" },
+            { "hrsh7th/cmp-path" },
+            { "saadparwaiz1/cmp_luasnip" },
+            { "hrsh7th/cmp-nvim-lua" },
+            { "hrsh7th/cmp-nvim-lsp" },
+
+            -- Snippets
+            { "L3MON4D3/LuaSnip" },
+            { "rafamadriz/friendly-snippets" },
+        },
+        config = function()
+            -- FIXME: remove lsp_zero
+            local lsp_zero = require('lsp-zero')
+
+            lsp_zero.on_attach(function(client, bufnr)
+                local opts = { buffer = bufnr, remap = false }
+
+                if client.name == "eslint" then
+                    vim.cmd.LspStop('eslint')
+                    return
+                end
+
+                vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+                vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+                vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
+                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+                vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, opts)
+                vim.keymap.set("n", "<leader>g", vim.diagnostic.open_float, opts)
+                vim.keymap.set("n", "[g", function() vim.diagnostic.jump({ count = -1 }) end, opts)
+                vim.keymap.set("n", "]g", function() vim.diagnostic.jump({ count = 1 }) end, opts)
+
+                local builtin = require("telescope.builtin")
+                vim.keymap.set("n", "gd", builtin.lsp_definitions, opts)
+                vim.keymap.set("n", "gi", builtin.lsp_implementations, opts)
+                vim.keymap.set("n", "gr", builtin.lsp_references, opts)
+            end)
+
+            -- Setup mason for LSP server installation
+            require('mason').setup({})
+            require('mason-lspconfig').setup({
+                ensure_installed = {
+                    'lua_ls',
+                    'rust_analyzer',
+                },
+                handlers = {
+                    lsp_zero.default_setup,
+
+                    -- Custom setup for lua_ls
+                    lua_ls = function()
+                        local lua_opts = lsp_zero.nvim_lua_ls()
+                        require('lspconfig').lua_ls.setup(lua_opts)
+                    end,
+                },
+            })
+
+            -- Setup emmet_ls separately
+            local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+            vim.lsp.config.emmet_ls = {
+                capabilities = capabilities,
+                filetypes = {
+                    "css", "eruby", "html", "javascript", "javascriptreact",
+                    "less", "sass", "scss", "svelte", "pug", "typescriptreact", "vue"
+                },
+                init_options = {
+                    html = {
+                        options = {
+                            ["bem.enabled"] = true,
+                        },
+                    },
+                }
+            }
+
+            vim.lsp.enable('emmet_ls')
+
+            require("conform").setup({
+                log_level = vim.log.levels.DEBUG,
+                formatters_by_ft = {
+                    python = { "black", "isort" },
+                    javascript = { "prettier" },
+                    typescript = { "prettier" },
+                    javascriptreact = { "prettier" },
+                    typescriptreact = { "prettier" },
+                    css = { "prettier" },
+                    html = { "prettier" },
+                    json = { "prettier" },
+                    yaml = { "prettier" },
+                    markdown = { "prettier" },
+                },
+                format_on_save = {
+                    timeout_ms = 2000,
+                    lsp_fallback = true,
+                },
+            })
+        end,
+    },
+}

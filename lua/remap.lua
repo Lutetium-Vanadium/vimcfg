@@ -1,5 +1,3 @@
-vim.g.mapleader = " "
-
 vim.keymap.set("n", ";", ":")
 
 -- Nicer navigation
@@ -66,3 +64,6 @@ vim.keymap.set("n", "<leader>,", function() vim.cmd.set("invlist") end)
 
 -- Show stats
 vim.keymap.set("n", "<leader>q", "g<c-g>")
+
+-- Disable F1 (help)
+vim.keymap.set({ "n", "i", "s" }, "<F1>", "<Nop>")
