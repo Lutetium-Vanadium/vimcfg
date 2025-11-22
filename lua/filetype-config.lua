@@ -63,7 +63,7 @@ autocmd('FileType', {
 
 autocmd('FileType', {
     group = filetype_group,
-    pattern = { "AvanteInput" },
+    pattern = { "Avante*" },
     callback = function()
         -- Disable line bar and auto wrapping
         vim.opt.textwidth = 0
