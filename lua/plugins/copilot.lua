@@ -2,6 +2,17 @@ local utils = require("utils")
 
 return {
     {
+        "zbirenbaum/copilot-cmp",
+        dependencies = {
+            "hrsh7th/nvim-cmp",
+        },
+        config = function()
+            -- Make sure to load cmp
+            require('cmp')
+            require("copilot_cmp").setup()
+        end
+    },
+    {
         "zbirenbaum/copilot.lua",
         event = "InsertEnter",
         dependencies = {
@@ -29,7 +40,7 @@ return {
                 cvs = false,
                 ["."] = false,
             },
-            -- on_status_update = require("lualine").refresh,
+            on_status_update = function() require("lualine").refresh() end,
         },
     },
     {
@@ -56,7 +67,7 @@ return {
             behaviour = {
                 auto_apply_diff_after_generation = false,
                 support_paste_from_clipboard = true,
-                auto_add_current_file = false,
+                auto_add_current_file = true,
                 auto_approve_tool_permissions = {
                     "rag_search", "git_diff", "glob", "search_keyword", "read_file_toplevel_symbols", "read_file",
                     "create_file", "copy_path", "create_dir", "replace_in_file",

@@ -73,6 +73,7 @@ return {
     },
     {
         "VonHeikemen/lsp-zero.nvim",
+        lazy = false,
         dependencies = {
             -- LSP Support
             { "neovim/nvim-lspconfig" },
@@ -133,8 +134,38 @@ return {
                         local lua_opts = lsp_zero.nvim_lua_ls()
                         require('lspconfig').lua_ls.setup(lua_opts)
                     end,
+
+                    -- Custom setup for rust_analyzer
+                    rust_analyzer = function()
+                        require('lspconfig').rust_analyzer.setup({
+                            settings = {
+                                ["rust-analyzer"] = {
+                                    cargo = {
+                                        features = "all",
+                                    },
+                                    checkOnSave = {
+                                        command = "clippy",
+                                    }
+                                }
+                            }
+                        })
+                    end,
                 },
             })
+
+            -- Diagnostic configuration
+            vim.diagnostic.config({
+                virtual_text = true,
+                signs = {
+                    text = {
+                        [vim.diagnostic.severity.ERROR] = '✘',
+                        [vim.diagnostic.severity.WARN] = '',
+                        [vim.diagnostic.severity.HINT] = '󰮥',
+                        [vim.diagnostic.severity.INFO] = 'i'
+                    }
+                }
+            })
+
 
             -- Setup emmet_ls separately
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
