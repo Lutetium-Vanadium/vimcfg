@@ -1,20 +1,49 @@
+local function set_conditional_breakpoint()
+    local dap = require('dap')
+    local line = vim.fn.line('.')
+    local bufnr = vim.api.nvim_get_current_buf()
+
+    -- Get existing breakpoints for current buffer
+    local breakpoints = require('dap.breakpoints').get(bufnr)
+    local existing_condition = ''
+
+    -- Check if there's a breakpoint on the current line
+    if breakpoints then
+        local buf_breakpoints = breakpoints[bufnr]
+        if buf_breakpoints then
+            for _, bp in pairs(buf_breakpoints) do
+                if bp.line == line then
+                    existing_condition = bp.condition or ''
+                    break
+                end
+            end
+        end
+    end
+
+    vim.ui.input({ prompt = "Breakpoint condition", default = existing_condition }, function(input)
+        if input then
+            dap.set_breakpoint(input)
+        end
+    end)
+end
+
 return {
     {
         "mfussenegger/nvim-dap",
         keys = {
-            { "<leader>dl", function() require("dap").run_last() end,                                             desc = "DAP: Run Last" },
-            { "<F5>",       function() require("dap").continue() end,                                             desc = "DAP: Continue" },
-            { "<F6>",       function() require("dap").run_to_cursor() end,                                        desc = "DAP: Continue Till Here" },
-            { "<F8>",       function() require("dap").step_over() end,                                            desc = "DAP: Step Over" },
-            { "<F9>",       function() require("dap").step_into() end,                                            desc = "DAP: Step Into" },
-            { "<F7>",       function() require("dap").step_out() end,                                             desc = "DAP: Step Out" },
-            { "<leader>dt", function() require("dap").toggle_breakpoint() end,                                    desc = "DAP: Toggle Breakpoint" },
-            { "<leader>dc", function() require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, desc = "DAP: Conditional Breakpoint" },
+            { "<leader>dl", function() require("dap").run_last() end,                           desc = "DAP: Run Last" },
+            { "<F5>",       function() require("dap").continue() end,                           desc = "DAP: Continue" },
+            { "<F6>",       function() require("dap").run_to_cursor() end,                      desc = "DAP: Continue Till Here" },
+            { "<F8>",       function() require("dap").step_over() end,                          desc = "DAP: Step Over" },
+            { "<F9>",       function() require("dap").step_into() end,                          desc = "DAP: Step Into" },
+            { "<F7>",       function() require("dap").step_out() end,                           desc = "DAP: Step Out" },
+            { "<leader>dt", function() require("dap").toggle_breakpoint() end,                  desc = "DAP: Toggle Breakpoint" },
+            { "<leader>dc", set_conditional_breakpoint,                                         desc = "DAP: Conditional Breakpoint" },
             { "<leader>du", desc = "DAP: Toggle UI" },
-            { "<leader>dr", function() require("dap").repl.open() end,                                            desc = "DAP: Open REPL" },
+            { "<leader>dr", function() require("dap").repl.open() end,                          desc = "DAP: Open REPL" },
             { "<leader>dq", desc = "DAP: Terminate" },
-            { "<leader>db", function() require("dap").list_breakpoints() end,                                     desc = "DAP: List Breakpoints" },
-            { "<leader>de", function() require("dap").set_exception_breakpoints({ "all" }) end,                   desc = "DAP: Exception Breakpoints" },
+            { "<leader>db", function() require("dap").list_breakpoints() end,                   desc = "DAP: List Breakpoints" },
+            { "<leader>de", function() require("dap").set_exception_breakpoints({ "all" }) end, desc = "DAP: Exception Breakpoints" },
         },
         dependencies = {
             "rcarriga/nvim-dap-ui",
