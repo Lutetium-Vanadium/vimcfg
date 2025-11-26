@@ -14,11 +14,8 @@ return {
         },
         dependencies = {
             "nvim-lua/plenary.nvim",
-            "nvim-telescope/telescope-ui-select.nvim",
         },
         config = function()
-            require("telescope").load_extension("ui-select")
-
             local builtin = require('telescope.builtin')
             local sorters = require "telescope.sorters"
 

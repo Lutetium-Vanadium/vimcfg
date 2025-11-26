@@ -58,7 +58,6 @@ return {
                 }
             },
             "HakonHarnes/img-clip.nvim",
-            "stevearc/dressing.nvim",
             "folke/snacks.nvim",
         },
         opts = {
