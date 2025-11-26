@@ -27,6 +27,16 @@ return {
                     additional_vim_regex_highlighting = false,
                 },
             }
+
+            vim.api.nvim_set_hl(0, '@module', { link = '@variable' })
+            vim.api.nvim_set_hl(0, '@function.builtin', { link = 'Type' })
+            vim.api.nvim_set_hl(0, '@type.builtin', { link = 'Type', italic=true })
+            vim.api.nvim_set_hl(0, '@tag.builtin', { link = 'Tag' })
+            vim.api.nvim_set_hl(0, '@tag.tsx', { link = 'Type' })
+            vim.api.nvim_set_hl(0, '@tag.delimiter', { fg = 'white' })
+            vim.api.nvim_set_hl(0, '@punctuation.delimiter', { fg = 'white' })
+            vim.api.nvim_set_hl(0, '@tag.attribute', { link = 'Function' })
+            vim.api.nvim_set_hl(0, '@constructor.python', { link = 'Type' })
         end,
     },
     {
