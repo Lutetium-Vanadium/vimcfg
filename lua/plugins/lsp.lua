@@ -30,6 +30,17 @@ local kind_icons = {
 
 return {
     {
+        "folke/lazydev.nvim",
+        ft = "lua", -- only load on lua files
+        opts = {
+            library = {
+                -- See the configuration section for more details
+                -- Load luvit types when the `vim.uv` word is found
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            },
+        },
+    },
+    {
         "hrsh7th/nvim-cmp",
         event = "InsertEnter",
         config = function()
@@ -44,6 +55,10 @@ return {
                     { name = 'nvim_lua' },
                     { name = 'buffer',  keyword_length = 3 },
                     { name = 'luasnip', keyword_length = 2 },
+                    {
+                        name = "lazydev",
+                        group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+                    },
                 },
                 formatting = {
                     fields = { "kind", "abbr", "menu" },
