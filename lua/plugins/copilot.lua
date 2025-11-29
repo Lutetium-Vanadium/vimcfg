@@ -128,7 +128,7 @@ return {
                     reverse_switch_windows = "<S-Tab>",
                     remove_file = "d",
                     add_file = "@",
-                    close = { "<Esc>", "q" },
+                    close = { "q" },
                     close_from_input = nil,
                 },
             },
