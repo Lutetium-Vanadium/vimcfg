@@ -18,7 +18,10 @@ return {
             },
             picker = { enabled = true },
             quickfile = { enabled = true },
-            statuscolumn = { enabled = true },
+            statuscolumn = {
+                left = { "sign", "mark", "fold", "git" },
+                enabled = true
+            },
             styles = {
                 input = {
                     relative = "cursor",
