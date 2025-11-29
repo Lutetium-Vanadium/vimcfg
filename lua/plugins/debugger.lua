@@ -185,7 +185,9 @@ return {
                 },
             })
 
-            vim.fn.sign_define("DapBreakpoint", { text = "🐞" })
+            vim.fn.sign_define("DapBreakpoint",          { text = "", texthl = "DebugSign" })
+            vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "DebugSign" })
+            vim.fn.sign_define("DapStopped", { text = "→", linehl = "ColorColumn" })
 
             dap.listeners.before.attach.dapui_config = function()
                 open_dapui()

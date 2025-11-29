@@ -200,6 +200,7 @@ call s:h("SpecialComment",{ "fg": s:aqua })
 call s:h("Tag",           { "fg": s:pink })
 "        Debug"
 
+call s:h("DebugSign",     { "fg": s:purered })
 call s:h("Todo",          { "fg": s:orange,   "format": "bold,italic" })
 call s:h("Comment",       { "fg": s:brightgrey, "format": "italic" })
                          
