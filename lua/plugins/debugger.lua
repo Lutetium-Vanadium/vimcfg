@@ -88,22 +88,38 @@ return {
             local keymap_restore = {}
 
             local function open_dapui()
+                if dap_ui_open then
+                    return
+                end
                 require("dapui").open()
                 dap_ui_open = true
+
                 for _, buf in pairs(vim.api.nvim_list_bufs()) do
                     local keymaps = vim.api.nvim_buf_get_keymap(buf, 'n')
+
                     for _, keymap in pairs(keymaps) do
                         if keymap.lhs == "K" then
                             table.insert(keymap_restore, keymap)
                             vim.api.nvim_buf_del_keymap(buf, 'n', 'K')
                         end
+                        if keymap.lhs == "<C-K>" then
+                            table.insert(keymap_restore, keymap)
+                            vim.api.nvim_buf_del_keymap(buf, 'n', '<C-K>')
+                        end
                     end
+
+                    vim.keymap.set('n', 'K', function() require("dap.ui.widgets").hover() end,
+                        { silent = true, buffer = buf })
+                    vim.keymap.set('n', '<C-K>', vim.lsp.buf.hover,
+                        { silent = true, buffer = buf })
                 end
-                vim.api.nvim_set_keymap(
-                    'n', 'K', '<Cmd>lua require("dap.ui.widgets").hover()<CR>', { silent = true })
             end
 
             local function close_dapui()
+                if not dap_ui_open then
+                    return
+                end
+
                 dap_ui_open = false
                 require("dapui").close()
                 for _, keymap in pairs(keymap_restore) do
@@ -179,6 +195,11 @@ return {
             end
             dap.listeners.before.event_exited.dapui_config = function()
                 close_dapui()
+            end
+            dap.listeners.before.terminated.dapui_config = function()
+                if #require("dap").sessions() == 0 then
+                    close_dapui()
+                end
             end
 
             -- Keymaps that need access to local functions
