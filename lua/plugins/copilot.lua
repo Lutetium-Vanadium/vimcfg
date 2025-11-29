@@ -52,9 +52,13 @@ return {
             "nvim-lua/plenary.nvim",
             "MunifTanjim/nui.nvim",
             {
-                "MeanderingProgrammer/render-markdown.nvim",
+                "Lutetium-Vanadium/render-markdown.nvim",
                 opts = {
                     file_types = { 'markdown', "md", "Avante" },
+                    code = {
+                        -- Make sure lsp extmarks are higher
+                        priority = 100
+                    }
                 }
             },
             "HakonHarnes/img-clip.nvim",

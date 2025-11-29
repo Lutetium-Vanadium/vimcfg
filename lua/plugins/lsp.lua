@@ -113,7 +113,7 @@ return {
 
                     -- LSP keymaps
                     vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-                    vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+                    vim.keymap.set({ "i", "n" }, "<C-k>", vim.lsp.buf.signature_help, opts)
                     vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
                     vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
                     vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, opts)
