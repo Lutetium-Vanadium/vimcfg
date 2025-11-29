@@ -40,6 +40,8 @@ return {
             vim.api.nvim_set_hl(0, '@constructor.python', { link = 'Type' })
             vim.api.nvim_set_hl(0, '@constructor.python', { link = 'Type' })
             vim.api.nvim_set_hl(0, '@property.json', { link = 'Type' })
+            vim.api.nvim_set_hl(0, '@property.yaml', { link = 'Type' })
+            vim.api.nvim_set_hl(0, '@property.toml', { link = 'Type' })
             vim.api.nvim_set_hl(0, '@module.rust', { link = 'Include' })
             vim.api.nvim_set_hl(0, '@lsp.type.namespace', { link = 'Include' })
             vim.api.nvim_set_hl(0, '@comment.documentation.rust', { link = 'SpecialComment' })

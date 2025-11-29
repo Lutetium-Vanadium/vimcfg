@@ -13,8 +13,6 @@ return {
             notifier = {
                 enabled = true,
                 timeout = 3000,
-                position = "bottomleft", -- change notification position here
-                direction = "up",        -- notifications stack upwards
             },
             picker = { enabled = true },
             quickfile = { enabled = true },

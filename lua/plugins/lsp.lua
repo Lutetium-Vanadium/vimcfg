@@ -27,15 +27,12 @@ local kind_icons = {
     Copilot = "",
 }
 
-
 return {
     {
         "folke/lazydev.nvim",
-        ft = "lua", -- only load on lua files
+        ft = "lua",
         opts = {
             library = {
-                -- See the configuration section for more details
-                -- Load luvit types when the `vim.uv` word is found
                 { path = "${3rd}/luv/library", words = { "vim%.uv" } },
             },
         },
@@ -43,35 +40,33 @@ return {
     {
         "hrsh7th/nvim-cmp",
         event = "InsertEnter",
+        dependencies = {
+            "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-path",
+            "hrsh7th/cmp-nvim-lsp",
+        },
         config = function()
             local cmp = require('cmp')
             local cmp_select = { behavior = cmp.SelectBehavior.Select }
+
             cmp.setup({
                 sources = {
-                    -- Copilot Source
                     { name = "copilot", group_index = 2 },
                     { name = 'nvim_lsp' },
                     { name = 'path' },
-                    { name = 'nvim_lua' },
                     { name = 'buffer',  keyword_length = 3 },
-                    { name = 'luasnip', keyword_length = 2 },
-                    {
-                        name = "lazydev",
-                        group_index = 0, -- set group index to 0 to skip loading LuaLS completions
-                    },
+                    { name = "lazydev", group_index = 0 },
                 },
                 formatting = {
                     fields = { "kind", "abbr", "menu" },
                     format = function(entry, vim_item)
-                        -- Kind icons
                         vim_item.kind = string.format("%s", kind_icons[vim_item.kind])
-                        -- vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
                         vim_item.menu = ({
                             nvim_lsp = "[LSP]",
-                            luasnip = "[Snippet]",
                             buffer = "[Buffer]",
                             path = "[Path]",
                             copilot = "[Copilot]",
+                            lazydev = "[LazyDev]",
                         })[entry.source.name]
                         return vim_item
                     end,
@@ -87,84 +82,81 @@ return {
         end
     },
     {
-        "VonHeikemen/lsp-zero.nvim",
-        lazy = false,
+        "williamboman/mason.nvim",
+        cmd = "Mason",
+        build = ":MasonUpdate",
+        opts = {},
+    },
+    {
+        "neovim/nvim-lspconfig",
         dependencies = {
-            -- LSP Support
-            { "neovim/nvim-lspconfig" },
-            { "williamboman/mason.nvim" },
-            { "williamboman/mason-lspconfig.nvim" },
-            { "stevearc/conform.nvim" },
-
-            -- Autocompletion
-            { "hrsh7th/cmp-buffer" },
-            { "hrsh7th/cmp-path" },
-            { "saadparwaiz1/cmp_luasnip" },
-            { "hrsh7th/cmp-nvim-lua" },
-            { "hrsh7th/cmp-nvim-lsp" },
-
-            -- Snippets
-            { "L3MON4D3/LuaSnip" },
-            { "rafamadriz/friendly-snippets" },
+            "williamboman/mason.nvim",
+            "williamboman/mason-lspconfig.nvim",
+            "hrsh7th/nvim-cmp",
+            "hrsh7th/cmp-nvim-lsp",
         },
+        event = { "BufReadPre", "BufNewFile" },
         config = function()
-            -- FIXME: remove lsp_zero
-            local lsp_zero = require('lsp-zero')
+            -- Setup LSP keymaps and autocommands on attach
+            vim.api.nvim_create_autocmd('LspAttach', {
+                callback = function(event)
+                    local client = vim.lsp.get_client_by_id(event.data.client_id)
 
-            lsp_zero.on_attach(function(client, bufnr)
-                local opts = { buffer = bufnr, remap = false }
+                    -- Stop eslint if it attaches
+                    if client and client.name == "eslint" then
+                        vim.lsp.stop_client(client.id)
+                        return
+                    end
 
-                if client.name == "eslint" then
-                    vim.cmd.LspStop('eslint')
-                    return
-                end
+                    local opts = { buffer = event.buf, remap = false }
+                    local builtin = require("telescope.builtin")
 
-                vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-                vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
-                vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
-                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-                vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, opts)
-                vim.keymap.set("n", "<leader>g", vim.diagnostic.open_float, opts)
-                vim.keymap.set("n", "[g", function() vim.diagnostic.jump({ count = -1 }) end, opts)
-                vim.keymap.set("n", "]g", function() vim.diagnostic.jump({ count = 1 }) end, opts)
+                    -- LSP keymaps
+                    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+                    vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+                    vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
+                    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+                    vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, opts)
+                    vim.keymap.set("n", "<leader>g", vim.diagnostic.open_float, opts)
+                    vim.keymap.set("n", "[g", function() vim.diagnostic.jump({ count = -1 }) end, opts)
+                    vim.keymap.set("n", "]g", function() vim.diagnostic.jump({ count = 1 }) end, opts)
 
-                local builtin = require("telescope.builtin")
-                vim.keymap.set("n", "gd", builtin.lsp_definitions, opts)
-                vim.keymap.set("n", "gi", builtin.lsp_implementations, opts)
-                vim.keymap.set("n", "gr", builtin.lsp_references, opts)
-            end)
+                    -- Telescope keymaps
+                    vim.keymap.set("n", "gd", builtin.lsp_definitions, opts)
+                    vim.keymap.set("n", "gi", builtin.lsp_implementations, opts)
+                    vim.keymap.set("n", "gr", builtin.lsp_references, opts)
+                end,
+            })
 
-            -- Setup mason for LSP server installation
-            require('mason').setup({})
+            -- Get default capabilities for LSP servers
+            local capabilities = vim.lsp.protocol.make_client_capabilities()
+            capabilities = vim.tbl_deep_extend('force', {}, capabilities, require('cmp_nvim_lsp').default_capabilities())
+
+            -- Custom setup for rust_analyzer
+            vim.lsp.config('rust_analyzer', {
+                capabilities = capabilities,
+                cmd = { 'rust-analyzer' },
+                filetypes = { 'rust' },
+                root_markers = { 'Cargo.toml', 'rust-project.json' },
+                settings = {
+                    ["rust-analyzer"] = {
+                        cargo = {
+                            features = "all",
+                        },
+                        checkOnSave = {
+                            command = "clippy",
+                        },
+                    },
+                },
+            })
+
+            -- Setup mason-lspconfig to ensure servers are installed and auto-enable them
             require('mason-lspconfig').setup({
                 ensure_installed = {
                     'lua_ls',
                     'rust_analyzer',
-                },
-                handlers = {
-                    lsp_zero.default_setup,
-
-                    -- Custom setup for lua_ls
-                    lua_ls = function()
-                        local lua_opts = lsp_zero.nvim_lua_ls()
-                        require('lspconfig').lua_ls.setup(lua_opts)
-                    end,
-
-                    -- Custom setup for rust_analyzer
-                    rust_analyzer = function()
-                        require('lspconfig').rust_analyzer.setup({
-                            settings = {
-                                ["rust-analyzer"] = {
-                                    cargo = {
-                                        features = "all",
-                                    },
-                                    checkOnSave = {
-                                        command = "clippy",
-                                    }
-                                }
-                            }
-                        })
-                    end,
+                    'ts_ls',
+                    'pyright',
                 },
             })
 
@@ -176,51 +168,34 @@ return {
                         [vim.diagnostic.severity.ERROR] = '✘',
                         [vim.diagnostic.severity.WARN] = '',
                         [vim.diagnostic.severity.HINT] = '󰮥',
-                        [vim.diagnostic.severity.INFO] = 'i'
-                    }
-                }
-            })
-
-
-            -- Setup emmet_ls separately
-            local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
-            vim.lsp.config.emmet_ls = {
-                capabilities = capabilities,
-                filetypes = {
-                    "css", "eruby", "html", "javascript", "javascriptreact",
-                    "less", "sass", "scss", "svelte", "pug", "typescriptreact", "vue"
-                },
-                init_options = {
-                    html = {
-                        options = {
-                            ["bem.enabled"] = true,
-                        },
+                        [vim.diagnostic.severity.INFO] = 'i',
                     },
-                }
-            }
-
-            vim.lsp.enable('emmet_ls')
-
-            require("conform").setup({
-                log_level = vim.log.levels.DEBUG,
-                formatters_by_ft = {
-                    python = { "black", "isort" },
-                    javascript = { "prettier" },
-                    typescript = { "prettier" },
-                    javascriptreact = { "prettier" },
-                    typescriptreact = { "prettier" },
-                    css = { "prettier" },
-                    html = { "prettier" },
-                    json = { "prettier" },
-                    yaml = { "prettier" },
-                    markdown = { "prettier" },
-                },
-                format_on_save = {
-                    timeout_ms = 2000,
-                    lsp_fallback = true,
                 },
             })
         end,
+    },
+    {
+        'stevearc/conform.nvim',
+        event = { "BufWritePre" },
+        cmd = { "ConformInfo" },
+        opts = {
+            log_level = vim.log.levels.DEBUG,
+            formatters_by_ft = {
+                python = { "black", "isort" },
+                javascript = { "prettier" },
+                typescript = { "prettier" },
+                javascriptreact = { "prettier" },
+                typescriptreact = { "prettier" },
+                css = { "prettier" },
+                html = { "prettier" },
+                json = { "prettier" },
+                yaml = { "prettier" },
+                markdown = { "prettier" },
+            },
+            format_on_save = {
+                timeout_ms = 2000,
+                lsp_fallback = true,
+            },
+        },
     },
 }
