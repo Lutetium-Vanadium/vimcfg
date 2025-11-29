@@ -16,6 +16,23 @@ return {
             "nvim-lua/plenary.nvim",
         },
         config = function()
+            require("telescope").setup({
+                pickers = {
+                    buffers = {
+                        show_all_buffers = true,
+                        sort_lastused = true,
+                        mappings = {
+                            i = {
+                                ["<c-d>"] = "delete_buffer",
+                            },
+                            n = {
+                                ["d"] = "delete_buffer",
+                            }
+                        }
+                    }
+                }
+            })
+
             local builtin = require('telescope.builtin')
             local sorters = require "telescope.sorters"
 
