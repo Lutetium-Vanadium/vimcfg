@@ -20,6 +20,7 @@ return {
 
                 highlight = {
                     enable = true,
+                    disable = { 'tmux' },
                     -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
                     -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
                     -- Using this option may slow down your editor, and you may see some duplicate highlights.
@@ -30,13 +31,19 @@ return {
 
             vim.api.nvim_set_hl(0, '@module', { link = '@variable' })
             vim.api.nvim_set_hl(0, '@function.builtin', { link = 'Type' })
-            vim.api.nvim_set_hl(0, '@type.builtin', { link = 'Type', italic=true })
+            vim.api.nvim_set_hl(0, '@type.builtin', { fg = '#66d9ef', italic = true })
             vim.api.nvim_set_hl(0, '@tag.builtin', { link = 'Tag' })
             vim.api.nvim_set_hl(0, '@tag.tsx', { link = 'Type' })
             vim.api.nvim_set_hl(0, '@tag.delimiter', { fg = 'white' })
             vim.api.nvim_set_hl(0, '@punctuation.delimiter', { fg = 'white' })
             vim.api.nvim_set_hl(0, '@tag.attribute', { link = 'Function' })
             vim.api.nvim_set_hl(0, '@constructor.python', { link = 'Type' })
+            vim.api.nvim_set_hl(0, '@constructor.python', { link = 'Type' })
+            vim.api.nvim_set_hl(0, '@property.json', { link = 'Type' })
+            vim.api.nvim_set_hl(0, '@module.rust', { link = 'Include' })
+            vim.api.nvim_set_hl(0, '@lsp.type.namespace', { link = 'Include' })
+            vim.api.nvim_set_hl(0, '@comment.documentation.rust', { link = 'SpecialComment' })
+            vim.api.nvim_set_hl(0, '@lsp.typemod.comment.documentation.rust', { link = '@comment.documentation.rust' })
         end,
     },
     {
