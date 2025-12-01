@@ -51,6 +51,7 @@ return {
             "jay-babu/mason-nvim-dap.nvim",
             "theHamsta/nvim-dap-virtual-text",
             "mfussenegger/nvim-dap-python",
+            "julianolf/nvim-dap-lldb",
         },
         config = function()
             local mason_dap = require("mason-nvim-dap")
@@ -71,6 +72,22 @@ return {
             })
 
             require("dap-python").setup("python3")
+            require("dap-lldb").setup({
+                configurations = {
+                    rust = {
+                        name = "Launch Default",
+                        type = "codelldb",
+                        request = "launch",
+                        cwd = '${workspaceFolder}',
+                        cargo = {
+                            args = { "run" },
+                            cwd = "${workspaceFolder}",
+                        },
+                        stopOnEntry = false,
+
+                    }
+                }
+            })
 
             -- Configurations
             table.insert(dap.configurations.python, 1, {
@@ -185,7 +202,7 @@ return {
                 },
             })
 
-            vim.fn.sign_define("DapBreakpoint",          { text = "", texthl = "DebugSign" })
+            vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DebugSign" })
             vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "DebugSign" })
             vim.fn.sign_define("DapStopped", { text = "→", linehl = "ColorColumn" })
 

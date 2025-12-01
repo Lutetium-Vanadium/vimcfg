@@ -10,6 +10,9 @@ return {
             input = {
                 enabled = true,
             },
+            image = {
+                enabled = true,
+            },
             notifier = {
                 enabled = true,
                 timeout = 3000,
@@ -18,6 +21,7 @@ return {
             quickfile = { enabled = true },
             statuscolumn = {
                 left = { "sign", "mark", "fold", "git" },
+                right = {},
                 enabled = true
             },
             styles = {

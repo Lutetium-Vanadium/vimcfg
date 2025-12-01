@@ -106,6 +106,10 @@ let s:br_purple   = { "gui": "#B77EE0" }
 let s:br_cyan     = { "gui": "#54CED6" }
 let s:br_white    = { "gui": "#FFFFFF" }
 
+let s:green_dim   = { "gui": "#6B8F1D", "cterm": "106" }
+let s:yellow_dim  = { "gui": "#A8651A", "cterm": "136" }
+let s:purered_dim = { "gui": "#990000", "cterm": "88" }
+
 " Highlighting 
 " ------------
 
@@ -149,6 +153,12 @@ call s:h("DiffAdd",       { "fg": s:addfg,      "bg": s:addbg })
 call s:h("DiffDelete",    { "fg": s:black,      "bg": s:delbg })
 call s:h("DiffChange",    { "fg": s:changefg,   "bg": s:changebg })
 call s:h("DiffText",      { "fg": s:black,      "bg": s:aqua })
+
+call s:h("GitSignsAdd",          { "fg": s:green_dim   })
+call s:h("GitSignsChange",       { "fg": s:yellow_dim  })
+call s:h("GitSignsChangedelete", { "fg": s:yellow_dim  })
+call s:h("GitSignsDelete",       { "fg": s:purered_dim })
+call s:h("GitSignsTopdelete",    { "fg": s:purered_dim })
 
 " fold
 call s:h("Folded",        { "fg": s:warmgrey,   "bg": s:darkblack })

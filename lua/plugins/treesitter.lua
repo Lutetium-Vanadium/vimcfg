@@ -36,6 +36,7 @@ return {
             vim.api.nvim_set_hl(0, '@tag.tsx', { link = 'Type' })
             vim.api.nvim_set_hl(0, '@tag.delimiter', { fg = 'white' })
             vim.api.nvim_set_hl(0, '@punctuation.delimiter', { fg = 'white' })
+            vim.api.nvim_set_hl(0, '@punctuation.delimiter.rust', { link = 'Delimiter' })
             vim.api.nvim_set_hl(0, '@tag.attribute', { link = 'Function' })
             vim.api.nvim_set_hl(0, '@constructor.python', { link = 'Type' })
             vim.api.nvim_set_hl(0, '@constructor.python', { link = 'Type' })
@@ -46,6 +47,7 @@ return {
             vim.api.nvim_set_hl(0, '@lsp.type.namespace', { link = 'Include' })
             vim.api.nvim_set_hl(0, '@comment.documentation.rust', { link = 'SpecialComment' })
             vim.api.nvim_set_hl(0, '@lsp.typemod.comment.documentation.rust', { link = '@comment.documentation.rust' })
+            vim.api.nvim_set_hl(0, '@lsp.type.macro.rust', { link = 'Function' })
         end,
     },
     {
