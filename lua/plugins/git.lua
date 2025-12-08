@@ -2,6 +2,9 @@ return {
     {
         "FabijanZulj/blame.nvim",
         cmd = { "BlameToggle", "ToggleBlame" },
+        keys = {
+            { "gb", "<cmd>BlameToggle<cr>", desc = "Toggle Git Blame" },
+        },
         opts = {},
     },
     {

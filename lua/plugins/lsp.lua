@@ -116,7 +116,7 @@ return {
                     vim.keymap.set({ "i", "n" }, "<C-k>", vim.lsp.buf.signature_help, opts)
                     vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
                     vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-                    vim.keymap.set("n", "<leader>c", vim.lsp.buf.code_action, opts)
+                    vim.keymap.set({ "n", "v" }, "<leader>c", vim.lsp.buf.code_action, opts)
                     vim.keymap.set("n", "<leader>g", vim.diagnostic.open_float, opts)
                     vim.keymap.set("n", "[g", function() vim.diagnostic.jump({ count = -1 }) end, opts)
                     vim.keymap.set("n", "]g", function() vim.diagnostic.jump({ count = 1 }) end, opts)
