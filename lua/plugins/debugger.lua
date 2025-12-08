@@ -130,6 +130,14 @@ return {
                     vim.keymap.set('n', '<C-K>', vim.lsp.buf.hover,
                         { silent = true, buffer = buf })
                 end
+
+                -- Remove statuscolumn https://github.com/folke/snacks.nvim/issues/2534#issuecomment-3567053987
+                for _, win in ipairs(vim.api.nvim_list_wins()) do
+                    local buf = vim.api.nvim_win_get_buf(win)
+                    if vim.bo[buf].filetype:match("^dapui_") then
+                        vim.wo[win].statuscolumn = ""
+                    end
+                end
             end
 
             local function close_dapui()
@@ -224,7 +232,7 @@ return {
             -- Keymaps that need access to local functions
             vim.keymap.set("n", "<leader>du", function() toggle_dapui() end, { desc = "DAP: Toggle UI" })
             vim.keymap.set("n", "<leader>dq", function()
-                require('dap').terminate()
+                require('dap').terminate({ all = true })
                 require("nvim-dap-virtual-text").toggle()
                 require("dap.repl").append("Exiting Debugger...")
             end, { desc = "DAP: Terminate" })

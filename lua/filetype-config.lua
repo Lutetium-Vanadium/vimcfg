@@ -73,3 +73,13 @@ autocmd('FileType', {
         vim.opt_local.colorcolumn = ""
     end
 })
+
+autocmd('FileType', {
+    group = filetype_group,
+    pattern = { "dap-repl" },
+    callback = function(ev)
+        -- Disable line bar and auto wrapping
+        vim.opt_local.statuscolumn = ""
+        vim.opt_local.colorcolumn = ""
+    end
+})
