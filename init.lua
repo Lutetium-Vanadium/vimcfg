@@ -1,9 +1,9 @@
 require("colourscheme")
-require("config/lazy")
 -- require("packer_setup")
 require("set")
-require("remap")
 require("filetype-config")
+require("config/lazy")
+require("remap")
 
 vim.g.netrw_browse_split = 0
 vim.g.netrw_banner = 0

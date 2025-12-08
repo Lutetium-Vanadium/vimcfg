@@ -37,7 +37,7 @@ autocmd('FileType', {
         vim.opt_local.tabstop = 2
         vim.opt_local.softtabstop = 2
         vim.opt_local.shiftwidth = 2
-        vim.opt.formatoptions = "jcroqlnt"
+        vim.opt_local.formatoptions = "jcroqlnt"
     end
 })
 
@@ -49,7 +49,7 @@ autocmd('FileType', {
         vim.opt_local.tabstop = 2
         vim.opt_local.softtabstop = 2
         vim.opt_local.shiftwidth = 2
-        vim.opt.formatoptions = "jcroqlnt"
+        vim.opt_local.formatoptions = "jcroqlnt"
     end
 })
 
@@ -60,7 +60,7 @@ autocmd('FileType', {
         vim.opt_local.tabstop = 4
         vim.opt_local.softtabstop = 4
         vim.opt_local.shiftwidth = 4
-        vim.opt.formatoptions = "jcroqlnt"
+        vim.opt_local.formatoptions = "jcroqlnt"
     end
 })
 
@@ -69,7 +69,7 @@ autocmd('FileType', {
     pattern = { "Avante*" },
     callback = function()
         -- Disable line bar and auto wrapping
-        vim.opt.textwidth = 0
-        vim.opt.colorcolumn = ""
+        vim.opt_local.textwidth = 0
+        vim.opt_local.colorcolumn = ""
     end
 })
