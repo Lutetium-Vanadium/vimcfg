@@ -18,6 +18,10 @@ return {
             linehl             = false,
             word_diff          = false,
             current_line_blame = false,
+            on_attach          = function(bufnr)
+                local gs = require("gitsigns")
+                vim.keymap.set("n", "gh", gs.preview_hunk, { buffer = bufnr })
+            end,
         },
     }
 
