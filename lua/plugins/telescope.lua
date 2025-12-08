@@ -1,4 +1,4 @@
-utils = require('utils')
+local utils = require('utils')
 
 return {
     {
@@ -17,6 +17,14 @@ return {
         },
         config = function()
             require("telescope").setup({
+                defaults = {
+                    mappings = {
+                        i = {
+                            ["<C-j>"] = "move_selection_next",
+                            ["<C-k>"] = "move_selection_previous",
+                        },
+                    },
+                },
                 pickers = {
                     buffers = {
                         show_all_buffers = true,

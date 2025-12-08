@@ -1,3 +1,5 @@
+local utils = require('utils')
+
 return {
     {
         "nvim-treesitter/nvim-treesitter",
