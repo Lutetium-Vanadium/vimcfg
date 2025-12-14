@@ -125,6 +125,31 @@ return {
                     vim.keymap.set("n", "gd", builtin.lsp_definitions, opts)
                     vim.keymap.set("n", "gi", builtin.lsp_implementations, opts)
                     vim.keymap.set("n", "gr", builtin.lsp_references, opts)
+
+                    if not client.server_capabilities.documentHighlightProvider then
+                        return
+                    end
+
+                    -- highlight groups for references
+                    vim.api.nvim_set_hl(0, 'LspReferenceText', { link = 'HoverHighlight' })
+                    vim.api.nvim_set_hl(0, 'LspReferenceRead', { link = 'HoverHighlight' })
+                    vim.api.nvim_set_hl(0, 'LspReferenceWrite', { link = 'HoverHighlight' })
+
+                    local group = vim.api.nvim_create_augroup('lsp_document_highlight_' .. event.buf, { clear = true })
+
+                    -- normal mode + visual mode (CursorHold triggers in both)
+                    vim.api.nvim_create_autocmd('CursorHold', {
+                        group = group,
+                        buffer = event.buf,
+                        callback = vim.lsp.buf.document_highlight,
+                    })
+
+                    -- clear when moving cursor (normal/visual)
+                    vim.api.nvim_create_autocmd({ 'CursorMoved' }, {
+                        group = group,
+                        buffer = event.buf,
+                        callback = vim.lsp.buf.clear_references,
+                    })
                 end,
             })
 

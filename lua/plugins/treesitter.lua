@@ -31,23 +31,32 @@ return {
                 },
             }
 
+            vim.api.nvim_set_hl(0, '@comment.error.comment', { link = 'CommentError' })
+            vim.api.nvim_set_hl(0, '@comment.note.comment', { link = 'CommentNote' })
+            vim.api.nvim_set_hl(0, '@comment.todo.comment', { link = 'CommentTodo' })
+
             vim.api.nvim_set_hl(0, '@module', { link = '@variable' })
             vim.api.nvim_set_hl(0, '@function.builtin', { link = 'Type' })
             vim.api.nvim_set_hl(0, '@type.builtin', { fg = '#66d9ef', italic = true })
+
             vim.api.nvim_set_hl(0, '@tag.builtin', { link = 'Tag' })
             vim.api.nvim_set_hl(0, '@tag.tsx', { link = 'Type' })
             vim.api.nvim_set_hl(0, '@tag.delimiter', { fg = 'white' })
             vim.api.nvim_set_hl(0, '@punctuation.delimiter', { fg = 'white' })
-            vim.api.nvim_set_hl(0, '@punctuation.delimiter.rust', { link = 'Delimiter' })
             vim.api.nvim_set_hl(0, '@tag.attribute', { link = 'Function' })
+
             vim.api.nvim_set_hl(0, '@constructor.python', { link = 'Type' })
             vim.api.nvim_set_hl(0, '@constructor.python', { link = 'Type' })
+
             vim.api.nvim_set_hl(0, '@property.json', { link = 'Type' })
             vim.api.nvim_set_hl(0, '@property.yaml', { link = 'Type' })
             vim.api.nvim_set_hl(0, '@property.toml', { link = 'Type' })
+
             vim.api.nvim_set_hl(0, '@module.rust', { link = 'Include' })
-            vim.api.nvim_set_hl(0, '@lsp.type.namespace', { link = 'Include' })
+            vim.api.nvim_set_hl(0, '@punctuation.delimiter.rust', { link = 'Delimiter' })
             vim.api.nvim_set_hl(0, '@comment.documentation.rust', { link = 'SpecialComment' })
+
+            vim.api.nvim_set_hl(0, '@lsp.type.namespace', { link = 'Include' })
             vim.api.nvim_set_hl(0, '@lsp.typemod.comment.documentation.rust', { link = '@comment.documentation.rust' })
             vim.api.nvim_set_hl(0, '@lsp.type.macro.rust', { link = 'Function' })
         end,

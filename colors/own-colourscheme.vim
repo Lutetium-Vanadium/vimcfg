@@ -125,6 +125,7 @@ call s:h("StatusLine",    { "fg": s:warmgrey,   "bg": s:black,        "format": 
 call s:h("StatusLineNC",  { "fg": s:darkgrey,   "bg": s:warmgrey,     "format": "reverse" })
 call s:h("TabLine",       { "fg": s:white,      "bg": s:darkblack,    "format": "reverse" })
 call s:h("Visual",        {                     "bg": s:lightgrey })
+call s:h("HoverHighlight",{                     "bg": s:lightblack3 })
 call s:h("Search",        { "fg": s:black,      "bg": s:yellow })
 call s:h("MatchParen",    { "fg": s:purple,                           "format": "underline,bold" })
 call s:h("Question",      { "fg": s:yellow })
@@ -211,7 +212,9 @@ call s:h("Tag",           { "fg": s:pink })
 "        Debug"
 
 call s:h("DebugSign",     { "fg": s:purered })
-call s:h("Todo",          { "fg": s:orange,   "format": "bold,italic" })
+call s:h("CommentTodo",   { "fg": s:orange,   "format": "bold,italic" })
+call s:h("CommentNote",   { "fg": s:aqua,   "format": "bold,italic" })
+call s:h("CommentError",  { "fg": s:pink,   "format": "bold,italic" })
 call s:h("Comment",       { "fg": s:brightgrey, "format": "italic" })
                          
 call s:h("Underlined",    { "fg": s:green })
